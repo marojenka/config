@@ -1,0 +1,13 @@
+    #!/bin/sh
+    
+    uri="http://me0w.net/pit/push.rc"
+    
+    if [ -f "$1" ]; then
+        out=$(curl -s -H "Expect:" --data-binary "@$1" "$uri")
+    else
+        out=$(curl -s -H "Expect:" --data-binary "@-" "$uri")
+    fi
+    
+    out="http://me0w.net/pit/"${out}
+    echo ${out}
+    echo -n "$out" | xclip -i -selection primary
