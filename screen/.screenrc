@@ -1,0 +1,21 @@
+vbell off
+startup_message off
+altscreen on
+#terminfo rxvt-unicode 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+#terminfo mlterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+#term screen.mlterm
+term screen-256color
+attrcolor b ".I"    # allow bold colors - necessary for some reason
+
+hardstatus on
+hardstatus string "screen: %n. %t : %S @ %H"
+
+escape ^Bb
+
+caption always "%{= kw}%{g}[ %{G}%H %{g}] %{Y}Lapapam: %{w}%1` %{g}[%=%{ =kw}%{w}%-w%{Y}[%{.kc}%n-%t%{Y}]%{w}%+w%=%{g}][ %{Y}%c %{g}]"
+
+bind c screen 1
+bind 0 select 10                                                            
+screen 1
+select 1
+

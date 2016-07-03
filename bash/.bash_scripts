@@ -1,0 +1,198 @@
+#!/bin/bash 
+
+function boo() 
+{ 
+    if [ -f "$1" ]; then 
+        case "$1" in 
+            *.tar.bz2) tar xjf "$1";; 
+            *.tar.gz) tar xzf "$1";; 
+            *.tar.Z) tar xzf "$1";; 
+            *.bz2) bunzip2 "$1";; 
+            *.rar) unrar x "$1";; 
+            *.cbr) unrar x "$1";; 
+            *.cbz) unzip "$1";; 
+			*.gz) gunzip "$1";; 
+            *.jar) unzip "$1";; 
+            *.tar) tar xf "$1";; 
+            *.tbz2) tar xjf "$1";; 
+            *.tgz) tar xzf "$1";; 
+            *.zip) unzip "$1";; 
+            *.Z) uncompress "$1";; 
+            *) echo "'$1' cannot be extracted.";; 
+        esac 
+    else 
+        echo "'$1' is not a file." 
+    fi 
+}
+
+function github-create() {
+    repo_name=$1
+    
+    dir_name=`basename $(pwd)`
+    
+    if [ "$repo_name" = "" ]; then
+      echo "Repo name (hit enter to use '$dir_name')?"
+      read repo_name
+    fi
+    
+    if [ "$repo_name" = "" ]; then
+      repo_name=$dir_name
+    fi
+    
+    username=`git config github.user`
+    if [ "$username" = "" ]; then
+      echo "Could not find username, run 'git config --global github.user <username>'"
+      invalid_credentials=1
+    fi
+    
+    token=`git config github.token`
+    if [ "$token" = "" ]; then
+      echo "Could not find token, run 'git config --global github.token <token>'"
+      invalid_credentials=1
+    fi
+    
+    if [ "$invalid_credentials" == "1" ]; then
+      return 1
+    fi
+    
+    echo -n "Creating Github repository '$repo_name' ..."
+    curl -u "$username:$token" https://api.github.com/user/repos -d '{"name":"'$repo_name'"}' > /dev/null 2>&1
+    echo " done."
+    
+    echo -n "Pushing local code to remote ..."
+    git remote add origin git@github.com:$username/$repo_name.git > /dev/null 2>&1
+    git push -u origin master > /dev/null 2>&1
+    echo " done."
+}
+
+#function cp_p()
+#{
+#   strace -q -ewrite cp -- "${1}" "${2}" 2>&1 \
+#      | awk '{
+#        count += $NF
+#            if (count % 10 == 0) {
+#               percent = count / total_size * 100
+#               printf "%3d%% [", percent
+#               for (i=0;i<=percent;i++)
+#                  printf "="
+#               printf ">"
+#               for (i=percent;i<100;i++)
+#                  printf " "
+#               printf "]\r"
+#             }
+#         }
+#         END { print "" }' total_size=$(stat -c '%s' "${1}") count=0
+#}
+#
+#ccopy(){ cp $1 /tmp/ccopy.$1; }
+#alias cpaste="ls /tmp/ccopy.* | sed 's|/tmp/ccopy.||' | xargs -I % mv /tmp/ccopy.% ./%" 
+## ccopy файл копирует файл из текущей директори в /tmp а cpaste перемещает все скопированные ранее в текущую.
+#export LESS_TERMCAP_mb=$'\E[01;31m'
+#export LESS_TERMCAP_md=$'\E[01;31m'
+#export LESS_TERMCAP_me=$'\E[0m'
+#export LESS_TERMCAP_se=$'\E[0m'
+#export LESS_TERMCAP_so=$'\E[01;44;33m'
+#export LESS_TERMCAP_ue=$'\E[0m'
+#export LESS_TERMCAP_us=$'\E[01;32m'
+#
+#
+#
+#lsn() {
+#  while read num name
+#  do
+#    declare "LS$num=$name"
+#  done <<<"$(ls -A1 "$@" | cat -n | tee /dev/stderr)"
+#}
+#
+## CUE=*.cue; $FLAC=*.flac
+## shnsplit -o flac -t "%n. %t" -f $CUE $FLAC 
+#
+#cue2files( ) {
+#	[[ $1 = "" ]] && CUE=`lc *.cue`
+#	[[ $2 = "" ]] && FLAC=`lc *.flac`
+#	echo CUE = $CUE
+#	echo FLAC = $FLAC
+# 	iconv -f cp1251 -t utf8 -o "$CUE" "$CUE"
+# 	shnsplit -o flac -t "%n. %t" -f "$CUE" "$FLAC" 
+#	cuetag.sh "$CUE" *.flac
+# 	ls -1lsh
+# 	#mv -f "$CUE" "$FLAC" *.log ~/.trash
+#}
+#highlight -O latex   -s bright -I  -l -t 4 -r  
+#xrandr --output DVI-0 --pos 0x0  --output  DVI-1 --mode 1024x768 --right-of DVI-0  --pos 1280x0
+# ffmpeg -f x11grab -s wxga -r 25 -i :0.0 -sameq /tmp/out.mpg 
+
+#sshfs  fooo@me0w.net:/home/.shellusers/fooo site -p 8022
+#ahy6eng2go
+#fusermount -u site
+#il3aezaing
+
+#save() {
+#	if   [ $# -eq 2 ]
+#	then
+#		local FOO="$2"
+#	elif [ $# -eq 1 ]
+#	then
+#		local FOO="$PWD"
+#	else
+#		echo "Check parameters"
+#		return 33
+#	fi
+#	local tmp=$(mktemp)
+#	cp ~/.binds $tmp
+#	echo FOO$1=\"$FOO\" >> $tmp
+#	head -n 100 $tmp > ~/.binds
+#	rm $tmp
+#}
+#
+#go2dir() {
+#	if [ $# -eq 1 ]
+#	then
+#		. ~/.binds
+#		eval FOO='$'FOO${1}
+#		if [[ "$FOO" != "" ]]
+#		then 
+#			cd "$FOO"
+#			return 0
+#		else
+#			echo There are nothing for FOO$1.
+#			return 42
+#		fi
+#	else
+#		echo "Check parameters"
+#	fi
+#}
+#
+#execute() {
+#	if [ $# -eq 1 ]
+#	then
+#		. ~/.binds
+#		eval FOO='$'FOO${1}
+#		if [[ "$FOO" != "" ]]
+#		then 
+#			$FOO
+#			return 0
+#		else
+#			echo There are nothing for FOO$1.
+#			return 42
+#		fi
+#	else
+#		echo "Check parameters"
+#	fi
+#}
+#
+## конвертировать теги
+## find -iname '*.mp3' -print0 | xargs -0 mid3iconv -eCP1251 --remove-v1
+#
+#alias s='save'
+#alias g='go2dir'
+#alias e='execute'
+#
+##bind '"\M-1"':"\"g 1\n\""
+##bind '"\M-2"':"\"g 2\n\""
+##bind '"\M-3"':"\"g 3\n\""
+##bind '"\M-4"':"\"g 4\n\""
+##bind '"\M-5"':"\"g 5\n\""
+
+# find . -type f -exec chmod 644 {} +
+# find . -type d -exec chmod 755 {} +

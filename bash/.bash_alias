@@ -1,0 +1,14 @@
+#!/bin/bash
+#export ROOT="/home/fooo/job/next/."
+#export CODE="/home/fooo/job/next/code"
+#export  BIN="/home/fooo/job/next/bin"
+#export DATA="/home/fooo/job/next/catalogs"
+#
+#PATH=$PATH:$BIN
+alias ll='ls -1'
+alias la='ls -Alh --group-directories-first'
+alias l='ls -hl --group-directories-first'
+alias lx='ls -hlX --group-directories-first'
+alias llc='ls -l --color=no'
+alias lc='ls -1 --color=no'
+alias le='ls -1 | grep -v'
